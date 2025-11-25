@@ -1,0 +1,60 @@
+<resources>
+    <string name="app_name">Reclutadores</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--OPCIONES MENU-->
+    <string name="menu">Inicio</string>
+    <string name="regCandidates">Registrar Candidatos</string>
+    <string name="candidates">Candidatos</string>
+    <string name="synchronize">Sincronizar</string>
+    <string name="logout">Cerrar Sesión</string>
+    <string name="login_button">Ingresar</string>
+    <string name="login_user">Usuario</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_content_desc_logo">Logo de la empresa</string>
+    <string name="login_content_desc_user">Logo usuario</string>
+    <string name="login_content_desc_password">Logo contraseña</string>
+    <string name="remind_user">Recordar usuario</string>
+
+    //Privacy Policies
+    <string name="confirm_policy_privacy">Aceptar</string>
+    <string name="location_and_other_policy_activity">Sobre tu ubicación y otros permisos</string>
+    <string name="like_describe_policy_activity">Como se describe en nuestra</string>
+    <string name="privacy_policy_activity">Politica de Privacidad.</string>
+    <string name="description_policy_activity">Si otorgas los permisos solicitados por nuestra aplicación (Combustibles Agroberries) a mostrarse a continuación, usamos la ubicación de tu dispositivo como dato recopilatorio, la cual forma parte de la información necesaria para realizar las capturas de nuestra app (Combustibles Agroberries) para muestra y uso de los mismos.</string>
+    <string name="description2_policy_activity">Tambien podemos usar y compartir esta información con socios confiables para brindarte nuestros servicios y mejorarlos.</string>
+    <string name="description3_policy_activity">Independientemente de que permitas o no el acceso a tu ubicación, puedes continuar utilizando nuestra app (Combustibles Agroberries) de manera limitada.
+                                         Tenga en cuenta que denegar el acceso a la ubicación de su dispositivo cuando se le solicite no impide el acceso a la información de ubicación general incrustada en su dirección IP.
+                                         Puedes cambiar los permisos otorgados en esta aplicación en cualquier momento.</string>
+    <string name="rights_policy_activity">Todos los derechos reservados © Agroberries México 2024-2030</string>
+
+    //Registro de reclutador
+    <string name="formulario">Registro de Reclutador</string>
+    <string name="reclutador">Nombre del reclutador</string>
+    <string name="lugar_origen">Lugar de origen</string>
+    <string name="num_personas">Número de personas</string>
+
+    //Registro de candidatos
+    <string name="formulario_candidatos">Registro de Candidatos</string>
+    <string name="candidate_name">Nombre del candidato</string>
+    <string name="ine_photo_desc">Tomar FOTO del INE</string>
+    <string name="documentation_checklist">Marcar documentación entregada</string>
+    <string name="register_candidate">Registrar candidato</string>
+    //documentacion
+    <string name="doc_ine">Registro de Candidatos</string>
+    <string name="doc_curp">CURP</string>
+    <string name="doc_rfc">RFC</string>
+    <string name="doc_birth_cert">Acta de nacimiento</string>
+    <string name="doc_nss">Número de seguro social</string>
+    <string name="doc_cbanco">Cuenta de banco</string>
+    <string name="doc_cfiscal">Constancia de situación fiscal</string>
+    <string name="recorte">Al tomar foto puedes ajustar la imagen</string>
+    <string name="finish">Finalizar registros</string>
+    <string name="contador">Candidatos registrados: </string>
+
+    //SINCRONIZACION
+    <string name="download_data_sync_fragment">Descargar Catalogos</string>
+    <string name="upload_data_sync_fragment">Enviar Candidatos</string>
+    <string name="upload_data_pending">Pendientes de enviar </string>
+</resources>

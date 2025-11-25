@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/menuFragment2">
+    <fragment
+        android:id="@+id/candidatesFragment"
+        android:name="com.agroberriesmx.reclutadores.ui.candidates.CandidatesFragment"
+        android:label="@string/candidates"
+        tools:layout="@layout/fragment_candidates" />
+    <fragment
+        android:id="@+id/registerCandidatesFragment"
+        android:name="com.agroberriesmx.reclutadores.ui.registerCandidate.RegisterCandidatesFragment"
+        android:label="@string/regCandidates" />
+
+    <fragment
+        android:id="@+id/synchronizeFragment"
+        android:name="com.agroberriesmx.reclutadores.ui.synchronize.SynchronizeFragment"
+        android:label="@string/synchronize"
+        tools:layout="@layout/fragment_synchronize" />
+    <fragment
+        android:id="@+id/menuFragment2"
+        android:name="com.agroberriesmx.reclutadores.ui.menu.MenuFragment"
+        android:label="@string/menu"
+        tools:layout="@layout/fragment_menu" />
+</navigation>

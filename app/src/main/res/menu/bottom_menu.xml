@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/menuFragment2"
+        android:title="@string/menu"/>
+    <item
+        android:id="@+id/candidatesFragment"
+        android:title="@string/candidates"/>
+    <!--item
+        android:id="@+id/registerCandidatesFragment"
+        android:title="@string/regCandidates"/-->
+    <item
+        android:id="@+id/synchronizeFragment"
+        android:title="@string/synchronize"/>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/logout"
+                android:title="@string/logout"/>
+        </menu>
+    </item>
+</menu>
