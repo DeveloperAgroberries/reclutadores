@@ -34,6 +34,9 @@ import java.util.Locale
 import javax.inject.Inject
 import java.util.Calendar
 import java.util.TimeZone
+import androidx.core.content.ContextCompat
+import android.Manifest
+import android.content.pm.PackageManager
 
 @AndroidEntryPoint
 class RegisterCandidatesFragment : Fragment() {
@@ -236,15 +239,35 @@ class RegisterCandidatesFragment : Fragment() {
     }
 
     // RegisterCandidatesFragment.kt
+    // ⭐ NUEVO: Lanzador para solicitar el permiso de cámara
+    private val requestCameraPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // Si el usuario aceptó el permiso ahora, ejecutamos la lógica original de la foto
+            proceedToTakePhoto()
+        } else {
+            Toast.makeText(requireContext(), "Se requiere permiso de cámara para tomar la foto del INE", Toast.LENGTH_LONG).show()
+        }
+    }
 
+    // ⭐ MODIFICADO: Esta es la función que llamas desde el diálogo
     private fun takePhoto() {
-        val context = requireContext()
+        val permission = Manifest.permission.CAMERA
+        if (ContextCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED) {
+            // Ya tenemos permiso, vamos directo a la cámara
+            proceedToTakePhoto()
+        } else {
+            // No tenemos permiso, lo solicitamos al usuario
+            requestCameraPermissionLauncher.launch(permission)
+        }
+    }
 
-        // Creamos un nombre de archivo único con la marca de tiempo actual
+    // ⭐ NUEVA: Aquí movimos tu lógica original de creación de archivos
+    private fun proceedToTakePhoto() {
+        val context = requireContext()
         val timeStamp = System.currentTimeMillis()
         val tempFileName = "temp_ine_photo_$timeStamp.jpg"
-
-        // Creamos el nuevo archivo
         val file = File(context.filesDir, tempFileName)
 
         // Generamos la nueva URI

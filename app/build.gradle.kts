@@ -29,7 +29,7 @@ android {
             isDebuggable = true
             resValue("string", "AgroberriesMX", "[DEBUG]Reclutadores Agroberries MX")
             //buildConfigField("String", "BASE_URL", "\"http://54.165.41.23:5053/api/ReclutadoresApp/\"")
-            buildConfigField("String", "BASE_URL", "\"http://192.168.1.60:5011/api/ReclutadoresApp/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.50.120:5011/api/ReclutadoresApp/\"")
 
         }
 
@@ -43,7 +43,7 @@ android {
 
             resValue("string", "AgroberriesMX", "[DEBUG]Reclutadores Agroberries MX")
             //buildConfigField("String", "BASE_URL", "\"http://54.165.41.23:5053/api/ReclutadoresApp/\"")
-            buildConfigField("String", "BASE_URL", "\"http://192.168.1.60:5011/api/ReclutadoresApp/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.50.120:5011/api/ReclutadoresApp/\"")
         }
     }
     testBuildType = "debug" // 👈 añade esto aquí
@@ -63,9 +63,9 @@ android {
 
 dependencies {
 
-    val versionCameraX = "1.3.1"
-    val mlKit = "16.0.0"
-    val materialVersion = "1.12.0"
+    val versionCameraX = "1.5.3"
+    val mlKit = "16.0.1"
+    val materialVersion = "1.13.0"
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
