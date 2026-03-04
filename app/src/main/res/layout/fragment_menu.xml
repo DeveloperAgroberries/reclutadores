@@ -30,19 +30,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/reclutador"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             app:layout_constraintTop_toBottomOf="@id/tv_form_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <AutoCompleteTextView
                 android:id="@+id/et_reclutador"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapCharacters"
-                android:maxLines="1"
-                android:theme="@style/CursorFixStyle" />
+                android:inputType="none"
+                android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -80,7 +79,8 @@
                 android:id="@+id/et_personas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapCharacters"
+                android:inputType="number"
+                android:maxLength="3"
                 android:maxLines="1"
                 android:textCursorDrawable="@drawable/cursor_negro"/>
         </com.google.android.material.textfield.TextInputLayout>

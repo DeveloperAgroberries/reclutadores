@@ -5,18 +5,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController // 💡 Importación para la navegación
 import com.agroberriesmx.reclutadores.R // Asegúrate de que este import exista
 import com.agroberriesmx.reclutadores.databinding.FragmentMenuBinding
 import com.google.android.material.textfield.TextInputEditText
 import androidx.navigation.NavOptions // Añadir esta importación
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import androidx.fragment.app.viewModels
 
+@AndroidEntryPoint // 👈 ¡ESTO ES VITAL PARA HILT!
 class MenuFragment : Fragment() {
 
     private var _binding: FragmentMenuBinding? = null
     private val binding get() = _binding!!
+
+    // Inyectamos el ViewModel
+    private val viewModel: MenuViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,6 +40,13 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // 1. Empezar a observar la lista
+        setupObservers()
+
+        // 2. Cargar datos (puedes pasar el token de las SharedPreferences)
+        val token = "" // O el token que tengas guardado
+        viewModel.fetchReclutadores(token)
 
         val prefs = requireActivity().getSharedPreferences("RecruiterPrefs", Context.MODE_PRIVATE)
         val isActive = prefs.getBoolean("IS_RECRUITER_SESSION_ACTIVE", false)
@@ -70,6 +89,29 @@ class MenuFragment : Fragment() {
         }
     }
 
+    private fun setupObservers() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.reclutadores.collect { lista ->
+                    // 🔍 LOG DE CONTROL
+                    android.util.Log.d("MENU_DEBUG", "Tamaño de lista recibida: ${lista.size}")
+
+                    if (lista.isNotEmpty()) {
+                        val displayList = lista.map { "${it.cCodigoOrg} - ${it.vNombreOrg}" }
+                        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, displayList)
+
+                        (binding.etReclutador as? AutoCompleteTextView)?.apply {
+                            setAdapter(adapter)
+                            threshold = 0 // Para que muestre todo desde el inicio
+                        }
+                    } else {
+                        android.util.Log.w("MENU_DEBUG", "La lista llegó VACÍA del ViewModel")
+                    }
+                }
+            }
+        }
+    }
+
     private fun initListeners() {
         binding.btnAction.setOnClickListener {
             // 2. Al dar clic, validar el formulario
@@ -83,32 +125,32 @@ class MenuFragment : Fragment() {
     private fun isFormValid(): Boolean {
         var isValid = true
 
-        // Lista de campos a validar
-        val fieldsToValidate = listOf(
-            binding.etReclutador,
-            binding.etLugar,
-            binding.etPersonas
-        )
-
-        // Limpiar errores previos
+        // Limpiar errores primero
         binding.tilReclutador.error = null
         binding.tilLugar.error = null
         binding.tilPersonas.error = null
 
-        // Iterar y validar cada campo
-        fieldsToValidate.forEach { editText ->
-            if (editText.text.isNullOrBlank()) {
-                val til = getTextInputLayout(editText)
-                til?.error = "Este campo es obligatorio" // Mensaje de error
-
-                // Mostrar un Toast general si el formulario no es válido
-                if (isValid) {
-                    Toast.makeText(context, "Por favor, completa todos los campos.", Toast.LENGTH_SHORT).show()
-                }
-
+        if (binding.etReclutador.text.isNullOrBlank()) {
+            binding.tilReclutador.error = "Seleccione un reclutador"
+            isValid = false
+        }
+        if (binding.etLugar.text.isNullOrBlank()) {
+            binding.tilLugar.error = "Este campo es obligatorio"
+            isValid = false
+        }
+        // Validación de campo obligatorio
+        if (binding.etPersonas.text.isNullOrBlank()) {
+            binding.tilPersonas.error = "Este campo es obligatorio"
+            isValid = false
+        } else {
+            // Validación de valor mayor a cero
+            val numPersonas = binding.etPersonas.text.toString().toIntOrNull() ?: 0
+            if (numPersonas <= 0) {
+                binding.tilPersonas.error = "El número debe ser mayor a 0"
                 isValid = false
             }
         }
+
         return isValid
     }
 

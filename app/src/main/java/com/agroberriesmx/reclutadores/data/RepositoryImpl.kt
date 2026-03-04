@@ -1,16 +1,19 @@
 package com.agroberriesmx.reclutadores.data
 
 import android.util.Log
+import com.agroberriesmx.reclutadores.data.local.DatabaseHelper
 import com.agroberriesmx.reclutadores.data.network.ReclutadoresApiService
 import com.agroberriesmx.reclutadores.data.network.request.LoginRequest
 import com.agroberriesmx.reclutadores.domain.Repository
 import com.agroberriesmx.reclutadores.domain.model.FormattedCandidateModel
 import com.agroberriesmx.reclutadores.domain.model.LoginModel
+import com.agroberriesmx.reclutadores.domain.model.ReclutadoresModel
 import com.agroberriesmx.reclutadores.domain.model.TokenModel
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
-    private val apiService: ReclutadoresApiService
+    private val apiService: ReclutadoresApiService,
+    private val dbHelper: DatabaseHelper // 👈 Inyectamos tu base de datos
 ) : Repository {
     companion object {
         private const val APP_INFO_TAG_KEY = "ControlReclutadores"
@@ -44,6 +47,28 @@ class RepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             // Maneja los errores de red o excepciones
             Pair(e.message, null)
+        }
+    }
+
+    override suspend fun getReclutadores(token: String): List<ReclutadoresModel> {
+        return try {
+            val response = apiService.getReclutadores() // 🔍 ¿Aquí falta pasar el token?
+
+            if (response.isSuccessful && response.body() != null) {
+                val listaReclutadores = response.body()!!.response.map { item ->
+                    ReclutadoresModel(cCodigoOrg = item.cCodigoOrg, vNombreOrg = item.vNombreOrg)
+                }
+                Log.d("REPO_DEBUG", "API éxito: ${listaReclutadores.size} elementos")
+                dbHelper.saveReclutadoresLocal(listaReclutadores)
+                listaReclutadores
+            } else {
+                val errorBody = response.errorBody()?.string()
+                Log.e("REPO_DEBUG", "API Error: ${response.code()} - $errorBody")
+                dbHelper.getAllReclutadoresLocal()
+            }
+        } catch (e: Exception) {
+            Log.e("REPO_DEBUG", "Fallo total: ${e.message}")
+            dbHelper.getAllReclutadoresLocal()
         }
     }
 }

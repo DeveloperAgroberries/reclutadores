@@ -29,7 +29,7 @@ android {
             isDebuggable = true
             resValue("string", "AgroberriesMX", "[DEBUG]Reclutadores Agroberries MX")
             //buildConfigField("String", "BASE_URL", "\"http://54.165.41.23:5053/api/ReclutadoresApp/\"")
-            buildConfigField("String", "BASE_URL", "\"http://192.168.50.120:5011/api/ReclutadoresApp/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.21:5011/api/ReclutadoresApp/\"")
 
         }
 
@@ -43,7 +43,7 @@ android {
 
             resValue("string", "AgroberriesMX", "[DEBUG]Reclutadores Agroberries MX")
             //buildConfigField("String", "BASE_URL", "\"http://54.165.41.23:5053/api/ReclutadoresApp/\"")
-            buildConfigField("String", "BASE_URL", "\"http://192.168.50.120:5011/api/ReclutadoresApp/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.1.21:5011/api/ReclutadoresApp/\"")
         }
     }
     testBuildType = "debug" // 👈 añade esto aquí
@@ -122,5 +122,9 @@ dependencies {
     implementation("androidx.camera:camera-extensions:$versionCameraX")
 
     implementation ("com.google.android.material:material:$materialVersion") // O la versión más reciente
+
+    // Estas son las que habilitan "by viewModels()"
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
+    implementation("androidx.activity:activity-ktx:1.9.3")
 
 }

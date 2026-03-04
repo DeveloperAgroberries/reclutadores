@@ -1,14 +1,17 @@
 package com.agroberriesmx.reclutadores.data.network
 
+import android.content.Context
 import com.agroberriesmx.reclutadores.BuildConfig.BASE_URL
 import com.agroberriesmx.reclutadores.data.CredentialsRepositoryImpl
 import com.agroberriesmx.reclutadores.data.RepositoryImpl
 import com.agroberriesmx.reclutadores.data.core.interceptor.AuthInterceptor
+import com.agroberriesmx.reclutadores.data.local.DatabaseHelper
 import com.agroberriesmx.reclutadores.domain.CredentialsRepository
 import com.agroberriesmx.reclutadores.domain.Repository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -45,11 +48,16 @@ object NetworkModule {
     fun provideReclutadoresApiService(retrofit: Retrofit):ReclutadoresApiService {
         return retrofit.create(ReclutadoresApiService::class.java)
     }
-
+    
+    // 2. MODIFICA esta función agregando el parámetro dbHelper
     @Provides
     @Singleton
-    fun provideReclutadoresRepository(reclutadoresApiService: ReclutadoresApiService): Repository {
-        return RepositoryImpl(reclutadoresApiService)
+    fun provideReclutadoresRepository(
+        reclutadoresApiService: ReclutadoresApiService,
+        dbHelper: DatabaseHelper // 👈 Hilt lo sacará de la función de arriba
+    ): Repository {
+        // 👈 Ahora pasamos ambos al constructor
+        return RepositoryImpl(reclutadoresApiService, dbHelper)
     }
 
     // ⭐⭐⭐ ¡AÑADE ESTA FUNCIÓN PARA RESOLVER EL ERROR DE MissingBinding! ⭐⭐⭐

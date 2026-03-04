@@ -16,7 +16,7 @@ class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     companion object {
         private const val DATABASE_NAME = "reclutadores.db"
-        private const val DATABASE_VERSION = 3 // si sealizan updates a la DB hay subir el número de version: RICARDO DIMAS 29/10/2025
+        private const val DATABASE_VERSION = 4 // si sealizan updates a la DB hay subir el número de version: RICARDO DIMAS 29/10/2025
 
         private const val CREATE_TABLE_LOGINS = """
             CREATE TABLE genlogin (
@@ -49,16 +49,27 @@ class DatabaseHelper(context: Context) :
                 isSynced INTEGER DEFAULT 0
             )
         """
+
+        // ⭐ NUEVA TABLA PARA RECLUTADORES ⭐
+        private const val CREATE_TABLE_ORGANIGRAMA = """
+            CREATE TABLE rhu_organization_chart (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                c_codigo_org TEXT,
+                v_nombre_org TEXT
+            )
+        """
     }
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(CREATE_TABLE_LOGINS)
         db.execSQL(CREATE_TABLE_CANDIDATOS)
+        db.execSQL(CREATE_TABLE_ORGANIGRAMA) // 👈 Agregado
     }
 
     private fun dropTables(db: SQLiteDatabase) {
         db.execSQL("DROP TABLE IF EXISTS genlogin")
         db.execSQL("DROP TABLE IF EXISTS zCandidatos")
+        db.execSQL("DROP TABLE IF EXISTS rhu_organization_chart") // 👈 Agregado
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -469,6 +480,54 @@ class DatabaseHelper(context: Context) :
             0 // Retorna 0 en caso de error
         } finally {
             db.close() // Siempre cierra la base de datos
+        }
+    }
+
+    // ⭐ MÉTODOS PARA RECLUTADORES (API -> LOCAL) ⭐
+    fun saveReclutadoresLocal(lista: List<com.agroberriesmx.reclutadores.domain.model.ReclutadoresModel>) {
+        val db = this.writableDatabase
+        db.beginTransaction()
+        try {
+            // Limpiamos para no duplicar datos
+            db.delete("rhu_organization_chart", null, null)
+
+            lista.forEach { reclutador ->
+                val values = ContentValues().apply {
+                    put("c_codigo_org", reclutador.cCodigoOrg)
+                    put("v_nombre_org", reclutador.vNombreOrg)
+                }
+                db.insert("rhu_organization_chart", null, values)
+            }
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            Log.e("DBError", "Error al guardar reclutadores: ${e.message}")
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+    fun getAllReclutadoresLocal(): List<com.agroberriesmx.reclutadores.domain.model.ReclutadoresModel> {
+        val lista = mutableListOf<com.agroberriesmx.reclutadores.domain.model.ReclutadoresModel>()
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT c_codigo_org, v_nombre_org FROM rhu_organization_chart", null)
+
+        return try {
+            cursor.use { c ->
+                if (c.moveToFirst()) {
+                    do {
+                        lista.add(
+                            com.agroberriesmx.reclutadores.domain.model.ReclutadoresModel(
+                                cCodigoOrg = c.getString(0),
+                                vNombreOrg = c.getString(1)
+                            )
+                        )
+                    } while (c.moveToNext())
+                }
+            }
+            lista
+        } catch (e: Exception) {
+            Log.e("DBError", "Error al leer reclutadores: ${e.message}")
+            emptyList()
         }
     }
 }

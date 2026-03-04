@@ -4,6 +4,7 @@ import com.agroberriesmx.reclutadores.data.network.request.LoginRequest
 import com.agroberriesmx.reclutadores.data.network.request.UploadResponse
 import com.agroberriesmx.reclutadores.data.network.response.LoginResponse
 import com.agroberriesmx.reclutadores.data.network.response.LoginsResponse
+import com.agroberriesmx.reclutadores.data.network.response.OrganigramaResponse
 import com.agroberriesmx.reclutadores.domain.model.FormattedCandidateModel
 import retrofit2.Response
 import retrofit2.http.Body
@@ -20,4 +21,7 @@ interface ReclutadoresApiService {
 
     @POST("InsertarCandidato")
     suspend fun uploadData(@Body records: List<FormattedCandidateModel>): Response<UploadResponse>
+
+    @GET("ListReclutadores")
+    suspend fun getReclutadores(): Response<OrganigramaResponse>
 }
