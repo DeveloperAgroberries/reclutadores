@@ -12,8 +12,13 @@ import com.agroberriesmx.reclutadores.domain.CredentialsRepository
 import com.agroberriesmx.reclutadores.domain.model.FormattedCandidateModel
 import com.agroberriesmx.reclutadores.domain.model.RecordModel
 import com.agroberriesmx.reclutadores.domain.usecase.UploadUseCase
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -60,46 +65,48 @@ class SynchronizeViewModel @Inject constructor(
             _state.value = SynchronizeState.Loading
             try {
                 val localData = recordsRepository.getUnsynchronizedRecords()
-                Log.d("SynchronizeViewModel", "Local data to upload: $localData")
-                if (localData != null && localData.isNotEmpty()) {
-                    val transformedData: List<FormattedCandidateModel> = localData.map { register ->
 
-                        // 1. Obtener la hora actual usando la zona horaria de México
+                if (!localData.isNullOrEmpty()) {
+                    // 1. Transformación de datos (Manteniendo tu lógica de fechas)
+                    val transformedData = localData.map { register ->
                         val mexicoTimeZone = TimeZone.getTimeZone("America/Mexico_City")
                         val calendar = Calendar.getInstance(mexicoTimeZone)
-                        val localTimeInMexico = calendar.time
-
-                        // 2. Definir el formateador de salida con el patrón exacto, pero SIN la 'Z'
                         val isoFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS", Locale.getDefault())
-
-                        // 3. CRÍTICO: Forzar al formateador a usar la hora de MÉXICO para que imprima 14:29.
-                        // NO USAR UTC.
                         isoFormatter.timeZone = mexicoTimeZone
-
-                        // 4. Formatear la hora
-                        val dFechaRegistro = isoFormatter.format(localTimeInMexico)
+                        val dFechaRegistroActual = isoFormatter.format(calendar.time)
 
                         FormattedCandidateModel(
-                            vNomreclutador = register.nReclutador.trim(), // Ajusta si 'register' ya tiene 'vNomreclutador'
-                            vLorigen = register.lOrigen,                 // Ajusta si 'register' ya tiene 'vLorigen'
-                            vNomcandidato = register.nCandidato.trim(),  // Ajusta si 'register' ya tiene 'vNomcandidato'
-
-                            vInedoc = register.ineDoc,
+                            vNomreclutador = register.nReclutador.trim(),
+                            vLorigen = register.lOrigen,
+                            vNomcandidato = register.nCandidato.trim(),
+                            vInedoc = register.ineDoc, // Sigue siendo la ruta local para el JSON
                             cCurp = register.dCurp,
                             cRfc = register.dRFC,
                             cActa = register.dActa,
                             cNss = register.dNSS,
                             cBanco = register.cBanco,
                             cSf = register.cSF,
-
-                            dFecharegistro = register.dFechaRegistro, // Asegúrate de que este String ya esté en formato ISO 8601 con 'Z'
-
+                            dFecharegistro = register.dFechaRegistro ?: dFechaRegistroActual,
                             cPagado = "0"
                         )
                     }
 
-                    val response = uploadUseCase(transformedData)
+                    // 2. Convertir lista de datos a RequestBody (JSON)
+                    val jsonString = Gson().toJson(transformedData)
+                    val candidatosPart = RequestBody.create("text/plain".toMediaTypeOrNull(), jsonString)
 
+                    // 3. Convertir rutas de archivos a MultipartBody.Part
+                    val imageParts = localData.map { register ->
+                        val file = File(register.ineDoc)
+                        val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+                        // "archivosIne" debe coincidir con el nombre en el API C#
+                        MultipartBody.Part.createFormData("archivosIne", file.name, requestFile)
+                    }
+
+                    // 4. Llamada al UseCase
+                    val response = uploadUseCase(candidatosPart, imageParts)
+
+                    // 5. Manejo de resultados
                     if (response == "Ok") {
                         localData.forEach { record ->
                             record.isSynced = 1
@@ -108,12 +115,10 @@ class SynchronizeViewModel @Inject constructor(
                         _state.value = SynchronizeState.UploadSuccess("Datos enviados correctamente")
                         loadPendingRecords()
                     } else {
-                        if (response == "Unauthorized") {
-                            _state.value = SynchronizeState.Error("No cuentas con un token para enviar los datos, cierra e inicia sesion y vuelve a intentarlo, por favor.")
-                        } else if(response == "Not Found"){
-                            _state.value = SynchronizeState.Error("Servicio no disponible, por favor intenta mas tarde.")
-                        } else {
-                            _state.value = SynchronizeState.Error(response)
+                        when (response) {
+                            "Unauthorized" -> _state.value = SynchronizeState.Error("No cuentas con un token...")
+                            "Not Found" -> _state.value = SynchronizeState.Error("Servicio no disponible...")
+                            else -> _state.value = SynchronizeState.Error(response)
                         }
                     }
                 } else {
