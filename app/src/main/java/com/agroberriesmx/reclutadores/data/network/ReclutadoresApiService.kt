@@ -2,6 +2,7 @@ package com.agroberriesmx.reclutadores.data.network
 
 import com.agroberriesmx.reclutadores.data.network.request.LoginRequest
 import com.agroberriesmx.reclutadores.data.network.request.UploadResponse
+import com.agroberriesmx.reclutadores.data.network.response.CandidateResponse
 import com.agroberriesmx.reclutadores.data.network.response.LoginResponse
 import com.agroberriesmx.reclutadores.data.network.response.LoginsResponse
 import com.agroberriesmx.reclutadores.data.network.response.OrganigramaResponse
@@ -15,6 +16,7 @@ import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Query
 
 interface ReclutadoresApiService {
     @POST("LoginUser")
@@ -32,4 +34,9 @@ interface ReclutadoresApiService {
 
     @GET("ListReclutadores")
     suspend fun getReclutadores(): Response<OrganigramaResponse>
+
+    @GET("ConsultarCandidatos")
+    suspend fun consultarCandidatos(
+        @Query("vNomreclutador") reclutador: String
+    ): Response<CandidateResponse>
 }

@@ -15,6 +15,15 @@ class LocalAuthRepository @Inject constructor(@ApplicationContext context: Conte
     private val KEY_USER = "last_user_id"
     private val KEY_PASS = "last_password"
 
+    // --- AGREGA ESTA FUNCIÓN ---
+    /**
+     * Recupera el ID del usuario guardado localmente.
+     */
+    fun getSavedUserId(): String? {
+        return prefs.getString(KEY_USER, null)
+    }
+    // ---------------------------
+
     /**
      * Guarda el último usuario y contraseña al tener un login ONLINE exitoso.
      * Solo guarda el usuario limpio (sin trim).

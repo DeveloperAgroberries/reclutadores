@@ -114,6 +114,22 @@ class MainActivity : BaseActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.navViewDrawer.setupWithNavController(navController)
 
+        // 🔐 BLOQUE DE SEGURIDAD VIP (CORREGIDO)
+        val vips = listOf("VARELLANO", "RDIMAS", "AOROZCO")
+
+        // 🛑 CAMBIO AQUÍ: Usamos "auth_prefs" y la llave "last_user_id"
+        // que es donde LocalAuthRepository guarda los datos.
+        val authPrefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
+        val usuarioActual = authPrefs.getString("last_user_id", "")?.trim()?.uppercase() ?: ""
+
+        Log.d("ACCESO_VIP", "MainActivity detectó al usuario: [$usuarioActual]")
+
+        if (!vips.contains(usuarioActual)) {
+            // Ocultamos la opción si no es VIP
+            binding.navViewDrawer.menu.findItem(R.id.candidatesFragment)?.isVisible = false
+        }
+        // ---------------------------
+
         binding.navViewDrawer.setNavigationItemSelectedListener { menuItem ->
             // 1. Verificar si el destino es el menú de inicio
             if (menuItem.itemId == R.id.menuFragment2) {
