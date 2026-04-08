@@ -10,8 +10,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.agroberriesmx.reclutadores.R
 import com.agroberriesmx.reclutadores.databinding.ActivityLoginBinding
 import com.agroberriesmx.reclutadores.ui.home.MainActivity
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject // Necesario si usas la inyección en constructor (aunque no en Activity)
@@ -48,6 +50,11 @@ class LoginActivity : AppCompatActivity() {
         initUI()
         // 4. Iniciar la observación del ViewModel
         observeViewModel()
+
+        Glide.with(this)
+            .asGif()
+            .load(R.drawable.login_agroberries) // También puedes usar una URL: "https://ejemplo.com/fondo.gif"
+            .into(binding.gifBackground)
     }
 
     private fun initUI() {

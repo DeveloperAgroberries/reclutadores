@@ -18,15 +18,11 @@
     <string name="remind_user">Recordar usuario</string>
 
     //Privacy Policies
-    <string name="confirm_policy_privacy">Aceptar</string>
-    <string name="location_and_other_policy_activity">Sobre tu ubicación y otros permisos</string>
-    <string name="like_describe_policy_activity">Como se describe en nuestra</string>
-    <string name="privacy_policy_activity">Politica de Privacidad.</string>
-    <string name="description_policy_activity">Si otorgas los permisos solicitados por nuestra aplicación (Combustibles Agroberries) a mostrarse a continuación, usamos la ubicación de tu dispositivo como dato recopilatorio, la cual forma parte de la información necesaria para realizar las capturas de nuestra app (Combustibles Agroberries) para muestra y uso de los mismos.</string>
-    <string name="description2_policy_activity">Tambien podemos usar y compartir esta información con socios confiables para brindarte nuestros servicios y mejorarlos.</string>
-    <string name="description3_policy_activity">Independientemente de que permitas o no el acceso a tu ubicación, puedes continuar utilizando nuestra app (Combustibles Agroberries) de manera limitada.
-                                         Tenga en cuenta que denegar el acceso a la ubicación de su dispositivo cuando se le solicite no impide el acceso a la información de ubicación general incrustada en su dirección IP.
-                                         Puedes cambiar los permisos otorgados en esta aplicación en cualquier momento.</string>
+    <string name="location_and_other_policy_activity">Uso de tu ubicación y permisos</string>
+    <string name="description_policy_activity">La aplicación (Reclutadores Agroberries) solicita acceso a tu ubicación **mientras la aplicación está en uso** para registrar las coordenadas precisas al momento de capturar los datos de un candidato y validar la zona de reclutamiento.</string>
+    <string name="description2_policy_activity">Esta información es necesaria para asegurar la validez de los registros en campo y garantizar la transparencia en los procesos de contratación de Agroberries.</string>
+    <string name="description3_policy_activity">Si decides no otorgar este permiso, la función de georreferenciación de candidatos no estará disponible. Puedes gestionar este permiso en cualquier momento desde los ajustes de tu dispositivo.</string>
+    <string name="confirm_policy_privacy">ACEPTAR Y CONTINUAR</string>
     <string name="rights_policy_activity">Todos los derechos reservados © Agroberries México 2024-2030</string>
 
     //Registro de reclutador
@@ -57,4 +53,16 @@
     <string name="download_data_sync_fragment">Descargar Catalogos</string>
     <string name="upload_data_sync_fragment">Enviar Candidatos</string>
     <string name="upload_data_pending">Pendientes de enviar </string>
+
+    //ABOUT
+    <string name="about_fragment">Acerda de...</string>
+    <string name="developed_by_about_fragment">Desarrollado por el equipo de T.I. Agroberries México</string>
+    <string name="doubts_about_fragment">¿Tienes dudas?</string>
+    <string name="contact_us_about_fragment">Contactanos</string>
+    <string name="mail1_about_fragment">aorozco@agroberries.mx</string>
+    <string name="mail2_about_fragment">programador@agroberries.mx</string>
+    <string name="version_about_fragment">Version: 1.0.0</string>
+    <string name="privacy_policies_about_fragment">Políticas de privacidad</string>
+    <string name="title_activity_login">LoginActivity</string>
+
 </resources>

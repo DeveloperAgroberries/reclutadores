@@ -125,14 +125,28 @@ class CandidatesFragment : Fragment() {
         configurarDocumento(tvActa, item.cActa)
         configurarDocumento(tvSf, item.cSf)
 
-        // 🖼️ Cargar Foto con Glide de forma segura
-        item.vInedoc?.let { url ->
-            com.bumptech.glide.Glide.with(requireContext()) // Usar requireContext() es más estable
-                .load(url)
-                .placeholder(android.R.drawable.ic_menu_report_image) // Usa uno del sistema temporalmente
-                .into(ivFoto) // Ahora 'into' debería reconocerse
-        }
+        // 🖼️ Cargar Foto con Glide de forma segura y con URL dinámica
+        if (!item.vInedoc.isNullOrEmpty()) {
 
+            // 1. Definimos la IP (puedes usar la constante que definimos en el Adapter o ponerla aquí)
+            val BASE_URL_FOTOS = "http://192.168.50.120:5011/"
+            val PROD_URL_FOTOS = "http://54.165.41.23:5053/"
+
+            // 2. Construimos la URL: si no empieza con http, le pegamos la IP
+            val urlBase = if (item.vInedoc.startsWith("http")) "" else PROD_URL_FOTOS
+
+            // 3. Reemplazamos espacios por %20 para que Glide no falle
+            val urlFinal = (urlBase + item.vInedoc).replace(" ", "%20")
+
+            com.bumptech.glide.Glide.with(requireContext())
+                .load(urlFinal)
+                .placeholder(android.R.drawable.ic_menu_gallery) // Ocupa uno del sistema mientras carga
+                .error(android.R.drawable.stat_notify_error)    // Si la URL falla muestra error
+                .into(ivFoto)
+        } else {
+            // Si no hay ruta, ponemos una imagen por defecto
+            ivFoto.setImageResource(android.R.drawable.ic_menu_gallery)
+        }
         btnClose.setOnClickListener { dialog.dismiss() }
         dialog.setContentView(view)
         dialog.show()
