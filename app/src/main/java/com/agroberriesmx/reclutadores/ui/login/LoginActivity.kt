@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.agroberriesmx.reclutadores.R
@@ -46,6 +47,10 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // --- AGREGA ESTO PARA FORZAR EL MARGEN ---
+        // Esto asegura que el sistema NO ignore las barras de estado y navegación
+        WindowCompat.setDecorFitsSystemWindows(window, true)
 
         initUI()
         // 4. Iniciar la observación del ViewModel

@@ -62,15 +62,39 @@ class CandidatesFragment : Fragment() {
             setupRecyclerView()
             setupObservers()
 
+            // 1. FORZAR ESTADO INICIAL LIMPIO
+            binding.etReclutador.apply {
+                setText("", false)
+                clearFocus()
+                // Lo deshabilitamos momentáneamente para que no den click
+                // mientras el ProgressBar está cargando la lista
+                isEnabled = false
+                keyListener = null // Bloquea el teclado físico/virtual
+            }
+
+            // 2. CONFIGURAR EL CLICK
             binding.etReclutador.setOnClickListener {
                 (it as? AutoCompleteTextView)?.showDropDown()
             }
 
+            // 3. LIMPIAR ERROR AL ESCRIBIR/SELECCIONAR
+            // Si antes marcaste error por no seleccionar nada, esto lo quita al elegir
+            binding.etReclutador.setOnItemClickListener { _, _, _, _ ->
+                binding.tilSearch.error = null
+            }
+
+            // 4. DISPARAR CARGA DE DATOS
             viewModel.initData(requireContext())
 
+            // 5. BOTÓN DE BÚSQUEDA
             binding.btnSearch.setOnClickListener {
                 val seleccion = binding.etReclutador.text.toString().trim()
-                if (seleccion.isNotEmpty()) viewModel.fetchCandidates(seleccion, requireContext())
+                if (seleccion.isNotEmpty()) {
+                    binding.tilSearch.error = null // Limpiamos error si existía
+                    viewModel.fetchCandidates(seleccion, requireContext())
+                } else {
+                    binding.tilSearch.error = "Selecciona un reclutador"
+                }
             }
         } catch (e: Exception) {
             android.util.Log.e("PRUEBA_MAESTRA", "Error en el setup: ${e.message}")
@@ -157,23 +181,32 @@ class CandidatesFragment : Fragment() {
     }
 
     private fun setupObservers() {
+        // Dentro de setupObservers
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.reclutadores.collect { lista ->
                 if (lista.isNotEmpty()) {
                     val displayList = lista.map { "${it.cCodigoOrg} - ${it.vNombreOrg}" }
                     val autoAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, displayList)
-                    (binding.etReclutador as? AutoCompleteTextView)?.setAdapter(autoAdapter)
+
+                    binding.etReclutador.apply {
+                        setAdapter(autoAdapter)
+
+                        // 🚀 ESTO ES LO QUE TE FALTA:
+                        // Al poner el adapter, Android selecciona el primero por defecto.
+                        // Con esto le decimos: "Ponlo vacío y NO filtres nada".
+                        setText("", false)
+                    }
                 }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
+        /*viewLifecycleOwner.lifecycleScope.launch {
             viewModel.reclutadorNombre.collect { nombre ->
                 if (nombre.isNotEmpty()) {
                     binding.etReclutador.setText(nombre, false)
                 }
             }
-        }
+        }*/
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.candidates.collect { lista ->

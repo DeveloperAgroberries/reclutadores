@@ -23,6 +23,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import android.util.Log
 import androidx.navigation.NavOptions
 import androidx.navigation.ui.navigateUp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity() {
@@ -43,6 +45,21 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // 1. Limpiar cualquier color que el sistema quiera poner por defecto
+        window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+
+        // 2. Pintar la barra de arriba de BLANCO (o R.color.gray si prefieres gris)
+        window.statusBarColor = androidx.core.content.ContextCompat.getColor(this, R.color.white)
+
+        // 3. Pintar la barra de abajo de BLANCO
+        window.navigationBarColor = androidx.core.content.ContextCompat.getColor(this, R.color.white)
+
+        // 4. Poner los iconos en NEGRO (para que se vean en el fondo blanco)
+        val controller = androidx.core.view.WindowCompat.getInsetsController(window, window.decorView)
+        controller.isAppearanceLightStatusBars = true
+        controller.isAppearanceLightNavigationBars = true
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initUI()
@@ -187,6 +204,19 @@ class MainActivity : BaseActivity() {
             }
             .create()
             .show()
+    }
+
+    private fun configurarBarrasSistema() {
+        val window = this.window
+        val decorView = window.decorView
+        val controller = androidx.core.view.WindowCompat.getInsetsController(window, decorView)
+
+// 1. Forzamos el color de fondo a Blanco (o el gris que prefieras)
+        window.statusBarColor = androidx.core.content.ContextCompat.getColor(this, R.color.white)
+
+// 2. Ponemos los iconos en NEGRO para que se vean sobre el blanco
+// (Si los dejas blancos sobre fondo blanco, no se verá la hora)
+        controller.isAppearanceLightStatusBars = true
     }
 
     private fun handleLogout() {

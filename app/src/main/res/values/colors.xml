@@ -14,7 +14,7 @@
     <!--TOOLBAR-->
     <color name="toolbar_background">#7c30b8</color>
     <color name="primary">#7c30b8</color>
-    <color name="secondary">#081165</color>
+    <color name="secondary">#0F2399</color>
 
     //login
     <color name="black_alpha">#98000000</color>

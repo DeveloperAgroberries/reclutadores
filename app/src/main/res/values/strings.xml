@@ -34,7 +34,7 @@
     //Registro de candidatos
     <string name="formulario_candidatos">Registro de Candidatos</string>
     <string name="candidate_name">Nombre del candidato</string>
-    <string name="ine_photo_desc">Tomar FOTO del INE</string>
+    <string name="ine_photo_desc">TOMAR FOTO INE</string>
     <string name="documentation_checklist">Marcar documentación entregada</string>
     <string name="register_candidate">Registrar candidato</string>
     //documentacion
@@ -65,4 +65,8 @@
     <string name="privacy_policies_about_fragment">Políticas de privacidad</string>
     <string name="title_activity_login">LoginActivity</string>
 
+    //DETALLES CANDIDATOS
+    <string name="consulta_candidatos">Consultar Candidatos</string>
+    <string name="select_reclutador">Seleccione un reclutador</string>
+    <string name="buscar">Realizar Búsqueda</string>
 </resources>

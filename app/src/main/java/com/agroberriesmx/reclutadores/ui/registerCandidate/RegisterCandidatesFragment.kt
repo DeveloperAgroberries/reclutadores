@@ -225,13 +225,14 @@ class RegisterCandidatesFragment : Fragment() {
     }
 
     private fun showImageSourceDialog() {
-        val options = arrayOf("Tomar Foto (Cámara)", "Seleccionar de Galería")
+        //val options = arrayOf("Tomar Foto (Cámara)", "Seleccionar de Galería")
+        val options = arrayOf("Tomar Foto (Cámara)")
         AlertDialog.Builder(requireContext())
             .setTitle("Documento INE")
             .setItems(options) { dialog, which ->
                 when (which) {
                     0 -> takePhoto()
-                    1 -> galleryLauncher.launch("image/*")
+                    //1 -> galleryLauncher.launch("image/*")
                 }
                 dialog.dismiss()
             }

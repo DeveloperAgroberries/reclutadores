@@ -27,7 +27,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Consultar Candidatos"
+                android:text="@string/consulta_candidatos"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -38,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:hint="Seleccione un reclutador"
+                android:hint="@string/select_reclutador"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <AutoCompleteTextView
@@ -46,9 +46,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none"
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:cursorVisible="false" />
+                    android:text=""
+                    tools:ignore="SpeakableTextPresentCheck" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,7 +57,7 @@
                 android:layout_height="55dp"
                 android:layout_marginTop="12dp"
                 android:backgroundTint="#2E7D32"
-                android:text="Realizar Búsqueda"
+                android:text="@string/buscar"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 app:cornerRadius="8dp" />
